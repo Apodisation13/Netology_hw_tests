@@ -14,8 +14,8 @@ class YandexUploader:
         response = requests.put('https://cloud-api.yandex.net/v1/disk/resources',
                                 params={'path': folder_name},
                                 headers={'Authorization': f'OAuth {self.ya_token}'})
-        print(response.json())
-        print(response.status_code)
+        # print(response.json())
+        # print(response.status_code)
         if "error" in response.json():
             self.status = response.json()['message']
             print(self.status)
