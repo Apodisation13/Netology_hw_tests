@@ -1,6 +1,16 @@
 from apps.yandex_folder import YandexUploader
 import requests
 
+cc = []
+
+
+def clear():
+    for folder in cc:
+        response = requests.delete('https://cloud-api.yandex.net/v1/disk/resources',
+                                   params={'path': f'Test1/{folder}'},
+                                   headers={'Authorization': f'OAuth {YandexUploader().ya_token}'})
+        print(response.status_code)
+
 
 class TestApp:
     @classmethod
@@ -9,7 +19,9 @@ class TestApp:
 
     @classmethod
     def teardown_class(cls):
-        print('teardown_class')
+        print('teardown_class_start')
+        clear()  # почистить всё, что мы насоздавали в тестах
+        print('teardown_class_end')
 
     @staticmethod
     def setup():
@@ -48,9 +60,11 @@ class TestApp:
 
     def test_create_new_folder(self):
         ya = YandexUploader()
-        path = 'Test1/Folder7'
+        folder = 'Folder7'
         folder_set_before = set(ya.check_folder_name()[1])  # множество из списка папок до создания папки
-        ya.create_folder(path)  # создали папку
+        ya.create_folder(f'Test1/{folder}')  # создали папку
         assert ya.status == 'Папка создана'
         folder_set_after = set(ya.check_folder_name()[1])  # множество из списка папок ПОСЛЕ создания папки
-        assert folder_set_after.difference(folder_set_before) == {'Folder7'}  # проверка что создалась только 1 папка
+        assert folder_set_after.difference(folder_set_before) == {folder}  # проверка что создалась только 1 папка
+        cc.append(folder)  # добавляю папку в список созданных тестами, чтобы в теардауне удалить их
+        # print(cc)

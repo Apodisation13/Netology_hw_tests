@@ -54,5 +54,5 @@ class YandexUploader:
 
 if __name__ == '__main__':
     ya = YandexUploader()
-    ya.create_folder(f'Test1/Folder6')
+    ya.create_folder(f'Test1/Folder7')
     ya.check_folder_name()
